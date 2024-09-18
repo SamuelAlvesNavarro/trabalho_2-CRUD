@@ -33,10 +33,10 @@ void create(){
         printf("\n Erro de abertura de arquivo\n");
         exit(1);
     }
-	printf("\n        			Maximo de 100 alunos\n\n");
+	printf("\n\t\tMaximo de 100 alunos\n\n");
     do{
         printf("\nNome: ");
-        scanf("%s", alunos[i].nome);
+        fgets(alunos[i].nome, sizeof(alunos[i].nome), stdin);
         printf("\nID: ");
         scanf("%d", &alunos[i].id);
         printf("\nIdade: ");
@@ -50,7 +50,7 @@ void create(){
         scanf("%d", &alunos[i].data.mes);
         scanf("%d", &alunos[i].data.ano);
 		
-        fwrite(&alunos, sizeof(alunos), 1, arquivo);
+        fwrite(&alunos[i], sizeof(alunos), 1, arquivo);
         printf("\n Adicionar outro aluno (s/n)?: ");
         i++;
      do{
@@ -63,16 +63,16 @@ void create(){
   fclose(arquivo);
 }
 
-void exibir(Aluno *alunos, int i){
-    printf("---------------------------------------------------------------\n");
-    printf("%-20s %-6s %-10d %-4.1f %02d/%02d/%04d\n", 
-            alunos[i].nome, 
-            alunos[i].curso, 
-            alunos[i].id, 
-            alunos[i].cr, 
-            alunos[i].data.dia, 
-            alunos[i].data.mes, 
-            alunos[i].data.ano);
+void exibir(Aluno *alunos){
+    printf("-----------------------------------------------------------------------------\n");
+    printf("%-50s %-10s %-8d %-6.1f %02d/%02d/%04d\n", 
+            &(*alunos).nome, 
+            &(*alunos).curso, 
+            (*alunos).id, 
+            (*alunos).cr, 
+            (*alunos).data.dia, 
+            (*alunos).data.mes, 
+            (*alunos).data.ano);
 }
 
 void read(){
@@ -83,9 +83,9 @@ void read(){
         printf ("\n Erro de abertura de arquivo\n");
         exit(1);
     }
-    printf("\n%-20s %-5s %-10s %-4s %-10s\n", "Nome", "Curso", "ID", "CR", "Data");
+    printf("\n%-50s %-10s %-8s %-6s %-10s\n", "Nome", "Curso", "ID", "CR", "Data");
     while(fread(&alunos, sizeof(alunos), 1, arquivo) == 1){
-        exibir(&alunos[i], i);
+        exibir(alunos);
         i++;
     }
 
@@ -124,6 +124,5 @@ void excluirFisico(){
 }
 
 int main(){
-    create();
     read();
 }
