@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compilar",  // Nome da tarefa que o launch.json espera
+            "type": "shell",
+            "command": "gcc",
+            "args": [
+                "-g",  // Flag para gerar informações de depuração
+                "${workspaceFolder}/main.c",  // Substitua por seu arquivo C
+                "-o",
+                "${workspaceFolder}/main.exe"  // Arquivo de saída (executável)
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"],
+            "detail": "Compilar código C."
+        }
+    ]
+}

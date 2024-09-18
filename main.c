@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <windows.h>
+#include <ctype.h>
+#include <string.h>
 
 
 #define MAX 100
@@ -107,4 +110,8 @@ int main(){
     };
     for(int i = 0; i < 2; i++)
         read(alunos, i);
+    
+    system("pause");
+    char c[10];
+    scanf("%s", c);
 }
