@@ -160,6 +160,8 @@ void read(){
 
     fclose(arquivo);
     
+    printf("\n\nAperte qualquer tecla para voltar...\n");
+    
     do{
 		t = getch();
 	}while(t == NULL);
@@ -301,6 +303,8 @@ void listaAprovados(){
 
     fclose(arquivo);
     
+    printf("\n\nAperte qualquer tecla para voltar...\n");
+    
     do{
 		t = getch();	
 	}while(t == NULL);
@@ -328,9 +332,39 @@ void listaReprovados(){
 
     fclose(arquivo);
     
+    printf("\n\nAperte qualquer tecla para voltar...\n");
+    
     do{
 		t = getch();	
 	}while(t == NULL);
+}
+
+void help(){
+	FILE *arquivo;
+	int n, count, i , j, x, r;
+	char frase[100], t;
+	
+	if ((arquivo = fopen("ajuda.txt", "r")) == NULL) {
+        printf("\n Erro de abertura de arquivo\n");
+        exit(1);
+    }
+		
+	fgets(frase, 100, arquivo);
+		
+	for(i=0;i<strlen(frase);i++){
+		if(frase[i] != ' ') frase[i] -= 5;
+			
+		if(frase[i] < 97 && frase[i] != ' '){
+			frase[i] += 26;
+		}
+	}
+		
+	printf("%s\n\nAperte qualquer tecla para voltar...\n", frase);
+	
+	do{
+		t = getch();	
+	}while(t == NULL);
+	
 }
 
 int main(){
@@ -386,7 +420,7 @@ int main(){
 
         case f1:
         	system("cls");
-            //help();
+            help();
 
             break;
 
