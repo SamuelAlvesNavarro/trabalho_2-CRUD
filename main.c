@@ -368,6 +368,7 @@ void help(){
 }
 
 int main(){
+    //João Pedro de Oliveira Santos
     //Leonardo Quederoli Leme
 	//Samuel Alves Navarro
 	int e;
