@@ -5,6 +5,8 @@
 #include <string.h>
 #include <conio.h>
 
+#define esc 27
+#define f1 59
 #define MAX 100
 
 typedef struct {
@@ -22,6 +24,37 @@ typedef struct alunos {
 
 Aluno alunos[MAX];
 
+int menu(){
+	int o=1;
+	char t;
+	
+	do{
+		system("cls");
+
+		printf("Escolha o que deseja fazer:\n");
+		printf("1. Registrar\n");
+		printf("2. Exibir\n");
+		printf("3. Atualizar\n");
+		printf("4. Excluir logicamente\n");
+		printf("5. Excluir fisicamente\n");
+		printf("6. Lista dos alunos aprovados\n");
+        printf("7. Lista dos alunos reprovados\n");
+		printf("\n<F1>  - Ajuda\n<Esc> - Sair\n");
+		
+		fflush(stdin);
+		t = getch();
+		//Verifica se a tecla digitada é um caracter especial
+		if(t == esc) return esc;
+
+		if(t == f1) return f1;
+
+        if(t > 48 && t < 56) return t-48;
+		
+	}while(t < 1 || t > 6);
+	
+	return 0;
+}
+
 int verificarID(int id, int qtd_alunos){
 	int i;
     for(i = 0; i < qtd_alunos; i++){
@@ -33,9 +66,12 @@ int verificarID(int id, int qtd_alunos){
 }
 
 void exibir(Aluno *aluno){
+	 //printf("%s %50s %10s %8s %6s %10s\n", "Nome", "Curso", "ID", "CR", "Data", "Idade");
+	 //printf("\n%-50s %-10s %-8s %-6s %-10s %-5s\n", "Nome", "Curso", "ID", "CR", "Data", "Idade");
+	 //printf("%-50s %-10s %-8d %-6.1f %02d/%02d/%04d %-5d\n"
     if(aluno->excluir == 0){
-        printf("%-50s %-10s %-8d %-6.1f %02d/%02d/%04d %-5d\n", 
-            aluno->nome, 
+        printf("%-50s %-10s %-8d %-6.1f %02d/%02d/%04d %4d\n",
+            aluno->nome,
             aluno->curso, 
             aluno->id, 
             aluno->cr, 
@@ -59,9 +95,9 @@ void create(){
     printf("\n\t\tMaximo de 100 alunos\n\n");
     
     do{
-
-        getchar();
+        fflush(stdin);
         printf("\nNome: ");
+        getchar();
         fgets(alunos[qtd_alunos].nome, sizeof(alunos[qtd_alunos].nome), stdin);
         alunos[qtd_alunos].nome[strcspn(alunos[qtd_alunos].nome, "\n")] = '\0';
 
@@ -109,24 +145,41 @@ void create(){
 void read(){
     FILE *arquivo;
     Aluno aluno;
+    char t;
 
     if((arquivo = fopen("dados_alunos.dat", "rb")) == NULL){
         printf("\n Erro de abertura de arquivo\n");
         exit(1);
     }
 
-    printf("\n%-50s %-10s %-8s %-6s %-10s %-5s\n", "Nome", "Curso", "ID", "CR", "Data", "Idade");
+    printf("%-50s %-10s %-8s %-6s %-12s %-5s\n", "Nome", "Curso", "ID", "CR", "Data", "Idade");
     
     while(fread(&aluno, sizeof(Aluno), 1, arquivo) == 1){
         exibir(&aluno);
     }
 
     fclose(arquivo);
+    
+    do{
+		t = getch();
+	}while(t == NULL);
 }
 
 void update() {
     FILE *arquivo;
+    Aluno aluno;
     int id, encontrado = 0;
+    
+    if((arquivo = fopen("dados_alunos.dat", "rb")) == NULL){
+        printf("\n Erro de abertura de arquivo\n");
+        exit(1);
+    }
+    
+    while(fread(&aluno, sizeof(Aluno), 1, arquivo) == 1){
+        exibir(&aluno);
+    }
+    
+    fclose(arquivo);
 
     printf("\nDigite o ID do aluno a ser atualizado: ");
     scanf("%d", &id);
@@ -135,11 +188,11 @@ void update() {
         printf("\n Erro de abertura de arquivo\n");
         exit(1);
     }
-
-    Aluno aluno;
+    
     while(fread(&aluno, sizeof(Aluno), 1, arquivo) == 1){
         if(aluno.id == id && aluno.excluir == 0) {
             encontrado = 1;
+            fflush(stdin);
             printf("\nNovo nome: ");
             getchar();
             fgets(aluno.nome, sizeof(aluno.nome), stdin);
@@ -150,7 +203,7 @@ void update() {
             printf("\nNovo curso: ");
             scanf("%s", aluno.curso);
 
-            fseek(arquivo, -sizeof(Aluno), SEEK_CUR);
+            fseek(arquivo, sizeof(Aluno), SEEK_CUR);
             fwrite(&aluno, sizeof(Aluno), 1, arquivo);
             break;
         }
@@ -229,6 +282,7 @@ void excluirFisico(){
 
 void listaAprovados(){
     FILE *arquivo;
+    char t;
 
     if((arquivo = fopen("dados_alunos.dat", "rb")) == NULL){
         printf("\n Erro de abertura de arquivo\n");
@@ -246,10 +300,16 @@ void listaAprovados(){
     }
 
     fclose(arquivo);
+    
+    do{
+		t = getch();	
+	}while(t == NULL);
+    
 }
 
 void listaReprovados(){
     FILE *arquivo;
+    char t;
 
     if ((arquivo = fopen("dados_alunos.dat", "rb")) == NULL) {
         printf("\n Erro de abertura de arquivo\n");
@@ -267,16 +327,75 @@ void listaReprovados(){
     }
 
     fclose(arquivo);
+    
+    do{
+		t = getch();	
+	}while(t == NULL);
 }
 
 int main(){
-    //create();
-    read();
-    listaAprovados();
-    update();
-    listaReprovados();
-    //excluirLogico();
-    //excluirFisico();
+    //Leonardo Quederoli Leme
+	//Samuel Alves Navarro
+	int e;
+
+	do{
+		e = menu();
+
+		switch(e){
+		case 1:
+			system("cls");
+			create();
+
+			break;
+		
+		case 2:
+			system("cls");
+			read();
+
+			break;
+
+		case 3:
+			system("cls");
+			update();
+
+			break;
+
+		case 4:
+			system("cls");
+			excluirLogico();
+
+			break;
+
+		case 5:
+			system("cls");
+			excluirFisico();
+
+			break;
+
+		case 6:
+			system("cls");
+			listaAprovados();
+
+			break;
+
+		case 7:
+			system("cls");
+			listaReprovados();
+
+			break;
+
+        case f1:
+        	system("cls");
+            //help();
+
+            break;
+
+		default:
+			printf("Algo deu errado\n");
+		}
+	}while(e != esc);
+
+	system("cls");
 
     return 0;
 }
